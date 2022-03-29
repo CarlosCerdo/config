@@ -40,62 +40,18 @@ set ttyfast "should make scrolling faster
 set lazyredraw "same as above
 set visualbell
 
+filetype plugin on
+syntax on
+
 
 " ===
-" === Other useful stuff
+" === editor bahavvior
 " ===
 
-" Compile function
 noremap r :call CompileRunGcc()<CR>
-func! CompileRunGcc()
+func CompileRunGcc()
 	exec "w"
-	if &filetype == 'c'
-		set splitbelow
-		:sp
-		:res -5
-		term gcc -ansi -Wall % -o %< && time ./%<
-	elseif &filetype == 'cpp'
-		set splitbelow
-		exec "!g++ -std=c++11 % -Wall -o %<"
-		:sp
-		:res -15
-		:term ./%<
-	elseif &filetype == 'cs'
-		set splitbelow
-		silent! exec "!mcs %"
-		:sp
-		:res -5
-		:term mono %<.exe
-	elseif &filetype == 'java'
-		set splitbelow
-		:sp
-		:res -5
-		term javac % && time java %<
-	elseif &filetype == 'sh'
-		:!time bash %
-	elseif &filetype == 'python'
-		set splitbelow
-		:sp
-		:term python3 %
-	elseif &filetype == 'html'
-		silent! exec "!".g:mkdp_browser." % &"
-	elseif &filetype == 'markdown'
-		exec "InstantMarkdownPreview"
-	elseif &filetype == 'tex'
-		silent! exec "VimtexStop"
-		silent! exec "VimtexCompile"
-	elseif &filetype == 'dart'
-		exec "CocCommand flutter.run -d ".g:flutter_default_device." ".g:flutter_run_args
-		silent! exec "CocCommand flutter.dev.openDevLog"
-	elseif &filetype == 'javascript'
-		set splitbelow
-		:sp
-		:term export DEBUG="INFO,ERROR,WARNING"; node --trace-warnings .
-	elseif &filetype == 'go'
-		set splitbelow
-		:sp
-		:term go run .
-	endif
+	exec "InstantMarkdownPreview"
 endfunc
 
 
@@ -114,6 +70,7 @@ call plug#begin('~/.vim/plugged')
 	Plug 'suan/vim-instant-markdown', {'for': 'markdown'}
 	Plug 'dhruvasagar/vim-table-mode', { 'on': 'TableModeToggle', 'for': ['text', 'markdown', 'vim-plug'] }
 	Plug 'mzlogin/vim-markdown-toc', { 'for': ['gitignore', 'markdown', 'vim-plug'] }
+	Plug 'vimwiki/vimwiki'
 call plug#end()
 
 
@@ -176,7 +133,7 @@ let g:instant_markdown_autostart = 0
 " let g:instant_markdown_allow_unsafe_content = 1
 " let g:instant_markdown_allow_external_content = 0
 " let g:instant_markdown_mathjax = 1
-let g:instant_markdown_browser = "chromium --new-window"
+" let g:instant_markdown_browser = "chromium --new-window"
 let g:instant_markdown_autoscroll = 1
 source ~/config/nvim/snippits.vim
 
@@ -189,3 +146,12 @@ source ~/config/nvim/snippits.vim
 let g:vmt_cycle_list_item_markers = 1
 let g:vmt_fence_text = 'TOC'
 let g:vmt_fence_closing_text = '/TOC'
+
+
+" ===
+" === vimwiki
+" ===
+
+let g:vimwiki_list = [{'path': '~/notes/vimwiki/',
+                      \ 'syntax': 'markdown', 'ext': '.md'}]
+
